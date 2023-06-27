@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}  
+{% load static %}
+{% block title %} Login{% endblock %} 
+
+
+{% block content %} 
+
+{% if "notok" in request.GET.auth %}
+<div class="alert alert-danger" role="alert">
+  Si è arrivati qui in quanto non si dispone dei permessi necessari per il servizio scelto!
+</div>
+{% endif %}
+
+<div class="card text-center bt-auto container-fluid" style="width: 30rem;">
+    <img class="card-img-top" src="{% static '/img/queibraviragazzi.jpg' %}" alt="Card image cap">
+    <div class="card-body justify-content-center ">
+      <h5 class="card-title">Login</h5>
+      <form method="post" > {% csrf_token %}
+        {{form | crispy}}
+        <input type="submit" class="btn btn-dark" value="Entra ora">
+        </form>
+    </div>
+  </div>
+{% endblock content %}
+

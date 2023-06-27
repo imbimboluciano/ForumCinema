@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% load static %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
+
+{% block content %}
+ 
+      <div class="row container-fluid">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="{{object.userprofile.avatar.image}}" alt="avatar"
+                class="rounded-circle img-fluid" style="width: 220px; height:200px">
+              <h5 class="my-3">{{ object.username }}</h5>
+              <p class="text-muted mb-2">{{object.userprofile.citazione.descrizione}}</p>
+              <div class="d-flex justify-content-center mb-2">
+                {% if request.user != object%}
+                {% if request.user.userprofile in object.userprofile.following.all %}
+                <a href="{% url 'forum:followuser' object.pk  %}" class="btn btn-outline-primary">Unfollow</a>
+              {% else %}
+                <a  href="{% url 'forum:followuser' object.pk %}" class="btn btn-primary"> Follow </a>
+            {% endif %}
+                
+                {% else %}
+                <a type="button" class="btn btn-primary mx-2" href="{% url 'forum:modificaprofilo' %}">Modifica Profilo</a>
+                <a type="button" class="btn btn-dark " href="{% url 'forum:modificaprofilo' %}">Cambia Password</a>
+                {% endif %}
+                
+                
+              </div>
+              <div class="row justify-content-center">
+                <div class = "col-lg-5">
+                    <b> Seguaci: </b>
+                    <p class="text-muted"> {{ object.userprofile.number_of_following }} </p>
+                </div>
+              <div class = "col-lg-5"> 
+                    <b> Seguiti: </b>
+                    <p class="text-muted"> {{ object.userprofile.followers.count }} </p>
+                  </div>
+                </div> 
+             
+            </div>
+          </div>
+          <div class="card mb-4 mb-lg-0 text-center">
+            <div class="card-body p-2">
+                <p> Descrizione <p>
+              {{ object.userprofile.bio }}
+            </div>
+          </div>
+
+  
+              <div class="card mb-4 mb-md-0 mt-2">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <p class="lead fw-normal mb-0">Film Preferiti</p>
+                        <p class="mb-0"><a type="button" class="btn btn-dark " href="">Vedi Tutti</a></p>
+                      </div>
+                      <div class="row row-cols-4">
+                        {% for movie in object.userprofile.favorities.all %}
+                        <div class="col mb-2">
+                          <img src="{{movie.poster}}"class="w-100 rounded-3">
+                        </div>
+                        {% endfor %}
+                    </div>
+                  
+              </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Nome Completo</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ object.first_name }} {{ object.last_name }}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{ object.email }}</p>
+                </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class = "container">
+        <div class = "row">
+        <div class="card mb-4 mb-md-0 mt-2">
+          <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                  <p class="lead fw-normal mb-0">Recensioni Pubblicate</p>
+                </div>
+                <div class = "container">
+                  <div class = "row">
+                  <div class="card mb-4 mb-md-0 mt-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <p class="lead fw-normal mb-0">Recensioni Pubblicate</p>
+                          </div>
+                         
+          {% for review in myreview.all %}
+          <div class="card mb-2" style="border-radius: 15px;">
+          <div class="card-body p-4">
+            <div class="d-flex text-black">
+              <div class="flex-shrink-0">
+                <img src="{{review.movie.poster}}"
+                  alt="Generic placeholder image" class="img-fluid"
+                  style="width: 180px; border-radius: 10px;">
+              </div>
+                    <div class="flex-grow-1 ms-3">
+                      <h5 class="mb-1 font-weight-bold">{{review.movie.titolo}}</h5>
+                          <div class="d-flex  rounded-3 p-2 mb-2"
+                            style="background-color: #efefef;">
+                            <div>
+                              {{ review.descrizione }}
+                            </div>
+                            <div class="d-flex pt-1">
+                             <p> {{ mipiace.all.count }}</p>
+                            </div>
+                          </div>
+                              <div class="d-flex pt-1 align-items-center">
+                                <button type="button" class="btn btn-outline-success">Modifica</button>
+                              </div>
+                    </div>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+      
+        
+            <div>
+            </div>
+        </div>
+      </div>
+         
+            
+      </div>
+{% endblock content %}

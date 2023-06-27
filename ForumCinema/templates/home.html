@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+<script src="{% static '/script/sidebar.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+
+
+{% block content %}
+  <div class="container py-5 h-100" data-spy="scroll" data-target="#myScrollspy" data-offset="15">
+    <div class="row d-flex justify-content-center align-items-top h-100">
+      <div class="col-lg-7">
+        {% for review in object_list %}
+        <div class="card mb-3" style="border-radius: 15px;">
+          <div class="card-body p-4">
+            <div class="d-flex text-black">
+              <div class="flex-shrink-0">
+                <img src="{{review.movie.poster}}"
+                  alt="Generic placeholder image" class="img-fluid"
+                  style="width: 180px; border-radius: 10px;">
+              </div>
+              <div class="flex-grow-1 ms-3 container">
+                <div class = "row align-items-center">
+                <div class = "col"> <img src="{{review.user.userprofile.avatar.image}}" alt="avatar"
+                class="rounded-circle img-fluid " style="width: 50px; height:40px"> 
+                <a class = "mb-1 ml-2 h5 font-weight-bold"  style="text-decoration:none; margin-left:3px"  href="{%url 'forum:profilo' review.user.pk %}">{{review.user.username}}</a> </div>
+                </div>
+                <p class="mb-2 pb-1" style="color: #2b2a2a;">{{review.movie.titolo}}</p>
+                <div class="d-flex  rounded-3 p-2 mb-2"
+                  style="background-color: #efefef;">
+                  <div>
+                    {{ review.descrizione }}
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="container">
+              <div class = "row align-items-center">
+                <div class = "col-8 "> 
+                  <strong class="text-secondary mx-1">{{ review.number_of_likes }} Mi Piace</strong>
+                   <strong class="text-secondary">{{ review.comments.count }} Commenti</strong></div>
+                <div class = "col-4 d-flex align-items-end">
+                  <a type="button" class="btn btn-outline-primary me-1 flex-grow-1" href ="{%url 'forum:detailreview' review.pk %}">Dettagli</a>
+                </div>
+              </div> 
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col-lg-5" id="myScrollspy">
+        <div class="" data-spy="" >
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body p-4">
+            <a type="button" class="btn btn-dark " href="{% url 'forum:pubblicareview' %}">Scrivi Recensione</a>
+            <input type="text" class = "rounded-2 mx-2" placeholder = "Cerca Utenti"><br>
+          </div>
+        </div>
+
+        <div class = "container ">
+          <div class = "row">
+          <div class="card mb-4 mb-md-0 mt-2 overflow-auto">
+            <div class="card-body">
+                <div class="d-flex justify-content-center align-items-center mb-4">
+                    <p class="lead fw-normal mb-0">Suggerimenti</p>
+                  </div>
+                           
+            {% for utenti in randomuser.all %}
+            <div class="" style="border-radius: 15px;">
+            <div class="card-body ">
+              <div class="d-flex text-black">
+                      <div class="flex-grow-1 ms-3">
+                        <img src="{{utenti.userprofile.avatar.image}}" alt="avatar" class="rounded-circle img-fluid mr-2" style="width: 50px; height:40px"> 
+                        <a class= "ml-2 h5 font-weight-bold" style = "text-decoration:none" href="{% url 'forum:profilo' utenti.pk %}">{{ utenti.username }}</a>
+                        <p style="color: #2b2a2a;">{{ utenti.userprofile.citazione }}</p>
+                      </div>
+              </div>
+            </div>
+          </div>
+            {% endfor %}
+        
+          
+              <div>
+              </div>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
