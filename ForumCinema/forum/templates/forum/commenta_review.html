@@ -6,12 +6,55 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> 
 
 {% block content %}
+<div class="row container-fluid">
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <img src="{{review.movie.poster}}" alt="avatar"
+            class="img-fluid w-50">
+          <h5 class="my-3">{{ review.movie.titolo }}</h5>
+          <p class="text-muted mb-2">{{review.user.username}}</p>
+          <div class="d-flex justify-content-center mb-2">
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <p class="lead fw-normal mb-0">Recensione</p>
+          </div>
+          {{review.descrizione}}
+      </div>
+    </div>
 
 
-<form method="post" > {% csrf_token %}
-    {{form.as_p}}
-<input type="submit" class="btn btn-dark" value="Conferma">
-</form>
+    <div class = "container">
+        <div class = "row">
+            <div class="card mb-4 mb-md-0 mt-2">
+                <div class="card-body text-center">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <p class="lead fw-normal mb-0">Commenti</p>
+                    </div>
+                    <div class="card d-flex align-items-center mb-2" style="border-radius: 15px;">
+                        <div class="card-body p-4 ">
+                                <img src="{{request.user.userprofile.avatar.image}}" alt="avatar"
+                                    class="img-fluid w-25 mb-2" style="border-radius: 10px;">
+                                <form method="post" > {% csrf_token %}
+                                    {{form | crispy}}
+                                    <input type="submit" class="btn btn-dark" value="Commenta">
+                                </form>
+                                <a type="button" class="btn btn-outline-dark mt-2" href="{% url 'forum:detailreview' review.id %}">Annulla Commento</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 {% endblock content %}

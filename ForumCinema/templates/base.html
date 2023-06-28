@@ -87,6 +87,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    {% block mycss %}{% endblock mycss %}
   </head>
   <body>
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -196,7 +197,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
+              <a class="nav-link d-flex align-items-center gap-2" href="{%url 'forum:discover' %}">
                 <svg class="bi"><use xlink:href="#cart"/></svg>
                 Discover
               </a>
@@ -254,7 +255,7 @@
       </div>
     </div>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 ">
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex flex-column justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
         {% block content %}
         

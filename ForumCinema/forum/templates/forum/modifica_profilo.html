@@ -7,12 +7,16 @@
 
 {% block content %}
 
-
-<form method="post" > {% csrf_token %}
-    {{ user_form.as_p }}
-  {{ profile_form.as_p }}
-<input type="submit" class="btn btn-dark" value="Conferma">
-</form>
+<div class = "card">
+  <div class ="card-body d-flex justify-content-center">
+    <form method="post" > {% csrf_token %}
+        {{ user_form | crispy}}
+      {{ profile_form | crispy }}
+      <a type = "button" class = "btn btn-outline-dark" href="{% url 'forum:profilo' request.user.pk %}">Annulla</a>
+    <input type="submit" class="btn btn-dark" value="Conferma">
+    </form>
+  </div>
+</div>
 
 
 {% endblock content %}

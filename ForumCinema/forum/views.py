@@ -1,4 +1,5 @@
 from typing import Any, Dict
+from django.db import models
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect, get_list_or_404
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from .models import *
@@ -37,15 +38,15 @@ class ReviewListView(ListView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         if not self.request.user.is_authenticated:
-            context['randomuser'] = User.objects.all()
-            print(context['randomuser'])
+            context['randomuser'] = User.objects.all().exclude(is_staff=True)
             return context
 
         randomuser = []
+
         for user in User.objects.all():
-            if user.userprofile not in self.request.user.userprofile.followers.all():
+            if user.userprofile in self.request.user.userprofile.followers.all():
                 randomuser.append(user.pk)
-        context['randomuser'] = User.objects.filter(pk__in=randomuser)
+        context['randomuser'] = User.objects.all().exclude(pk__in=randomuser).exclude(pk=self.request.user.pk).exclude(is_staff=True)
         return context
 
 class ReviewDetailView(LoginRequiredMixin,DetailView):
@@ -71,6 +72,9 @@ class ProfiloDetailView(LoginRequiredMixin,DetailView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['myreview'] = Review.objects.filter(user=self.kwargs['pk'])
+        userprofile = get_object_or_404(UserProfile, user=self.kwargs['pk'])
+        context["firstfourfavoritiesmovie"] = userprofile.favorities.all()[:4]
+        print(context['firstfourfavoritiesmovie'])
         return context
 
 @login_required
@@ -120,7 +124,8 @@ def add_comment_review(request, id):
             return redirect('forum:detailreview', review.id)
     else:
         form = CommentForm()
-    return render(request, 'forum/commenta_review.html', {'form': form})
+        review = get_object_or_404(Review, pk=id)
+    return render(request, 'forum/commenta_review.html', {'form': form, 'review':review})
     
 @login_required
 def followToggle(request, author):
@@ -136,3 +141,61 @@ def followToggle(request, author):
 
     return HttpResponseRedirect(reverse("forum:profilo", args=[authorObj.user.pk]))
     
+
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = ReviewUpdateForm
+    template_name = "forum/modifica_review.html"
+    success_url = reverse_lazy("home")
+
+
+class DiscoverView(LoginRequiredMixin,ListView):
+    model = Review
+    template_name = "forum/discover_page.html"
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return super().get_queryset()
+        
+        reviews_notfollowing = []
+        for review in self.model.objects.all():
+            if review.user.userprofile not in self.request.user.userprofile.followers.all():
+                reviews_notfollowing.append(review)
+
+        return reviews_notfollowing
+    
+class FollowListView(LoginRequiredMixin,DetailView):
+    model = User
+    template_name = "forum/followers_list.html"
+
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        user = get_object_or_404(User,pk = self.kwargs["pk"])
+        context["followers"] = user.userprofile.following.all()
+        print(context["followers"])
+        context["following"] = user.userprofile.followers.all()
+        print(context["following"])
+
+        return context
+    
+class AllFavoritiesMovieList(LoginRequiredMixin,DetailView):
+    model = User
+    template_name = "forum/all_favorities_movie.html"
+
+
+class SearchDiscoverListView(LoginRequiredMixin,ListView):
+    model = Review
+    template_name = "forum/search_result.html"
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return super().get_queryset()
+        
+        reviews_notfollowing = []
+        for review in self.model.objects.all():
+            if self.kwargs["ricerca"] in review.movie.titolo:   
+                if review.user.userprofile not in self.request.user.userprofile.followers.all():
+                    reviews_notfollowing.append(review)
+
+        return reviews_notfollowing

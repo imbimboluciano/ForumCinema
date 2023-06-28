@@ -22,6 +22,10 @@ class Movie(models.Model):
 class Avatar(models.Model):
     image = models.CharField(max_length=500)
 
+    def __str__(self):
+        return self.image
+    
+
 
 class Review(models.Model):
     movie = models.ForeignKey(Movie,on_delete= models.CASCADE)
@@ -36,7 +40,7 @@ class Comment(models.Model):
     descrizione = models.CharField(max_length=250)
     user = models.ForeignKey(User, on_delete= models.CASCADE)
     review = models.ForeignKey(Review, on_delete= models.CASCADE, related_name='comments')
-    date_posted = models.DateTimeField(default=timezone.now())
+    date_posted = models.DateTimeField()
 
 class UserProfile(models.Model):
     bio = models.CharField(max_length=500)

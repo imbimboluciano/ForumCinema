@@ -60,8 +60,3 @@ def activate(request, uidb64, token):
     else:  
         return HttpResponse('Activation link is invalid!')  
     
-
-
-class MovieListView(ListView):
-    model = Movie
-    template_name='home.html'

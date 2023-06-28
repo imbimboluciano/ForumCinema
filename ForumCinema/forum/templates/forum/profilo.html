@@ -24,18 +24,18 @@
                 
                 {% else %}
                 <a type="button" class="btn btn-primary mx-2" href="{% url 'forum:modificaprofilo' %}">Modifica Profilo</a>
-                <a type="button" class="btn btn-dark " href="{% url 'forum:modificaprofilo' %}">Cambia Password</a>
+                <a type="button" class="btn btn-dark " href="{% url 'change_password' %}">Cambia Password</a>
                 {% endif %}
                 
                 
               </div>
               <div class="row justify-content-center">
                 <div class = "col-lg-5">
-                    <b> Seguaci: </b>
+                     <b> <a sytle = "text-decoration:none" class = "text-black" href="{% url 'forum:followlist' object.pk %}"> Seguaci </a> </b>
                     <p class="text-muted"> {{ object.userprofile.number_of_following }} </p>
                 </div>
               <div class = "col-lg-5"> 
-                    <b> Seguiti: </b>
+                    <b> <a sytle = "text-decoration:none" class = "text-black" href="{% url 'forum:followlist' object.pk %}"> Seguiti </a></b>
                     <p class="text-muted"> {{ object.userprofile.followers.count }} </p>
                   </div>
                 </div> 
@@ -54,15 +54,19 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <p class="lead fw-normal mb-0">Film Preferiti</p>
-                        <p class="mb-0"><a type="button" class="btn btn-dark " href="">Vedi Tutti</a></p>
+                        <p class="mb-0"><a type="button" class="btn btn-dark " href="{% url 'forum:allfavoritiesmovie' object.pk %}">Vedi Tutti</a></p>
                       </div>
                       <div class="row row-cols-4">
-                        {% for movie in object.userprofile.favorities.all %}
+                        {% for movie in firstfourfavoritiesmovie.all %}
                         <div class="col mb-2">
                           <img src="{{movie.poster}}"class="w-100 rounded-3">
                         </div>
                         {% endfor %}
                     </div>
+                    <div class="row row-cols-4 d-flex justify-content-center">
+                        ...
+                    </div>
+
                   
               </div>
             </div>
@@ -98,13 +102,7 @@
               <div class="d-flex justify-content-between align-items-center mb-4">
                   <p class="lead fw-normal mb-0">Recensioni Pubblicate</p>
                 </div>
-                <div class = "container">
-                  <div class = "row">
-                  <div class="card mb-4 mb-md-0 mt-2">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <p class="lead fw-normal mb-0">Recensioni Pubblicate</p>
-                          </div>
+              
                          
           {% for review in myreview.all %}
           <div class="card mb-2" style="border-radius: 15px;">
@@ -122,14 +120,24 @@
                             <div>
                               {{ review.descrizione }}
                             </div>
-                            <div class="d-flex pt-1">
-                             <p> {{ mipiace.all.count }}</p>
-                            </div>
                           </div>
-                              <div class="d-flex pt-1 align-items-center">
-                                <button type="button" class="btn btn-outline-success">Modifica</button>
-                              </div>
                     </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="container">
+              <div class = "row align-items-center">
+                <div class = "col-8 "> 
+                  <strong class="text-secondary mx-1">{{ review.number_of_likes }} Mi Piace</strong>
+                   <strong class="text-secondary">{{ review.comments.count }} Commenti</strong></div>
+                <div class = "col-4 d-flex align-items-end">
+                  <a type="button" class="btn btn-outline-primary me-1 flex-grow-1" href ="{%url 'forum:detailreview' review.pk %}">Dettagli</a>
+                  {% if request.user == object %}
+                  <a type="button" class="btn btn-outline-success me-1 flex-grow-1" href ="{% url 'forum:modificareview' review.pk %}">Modifica</a>
+                  {% endif %}
+                  
+                </div>
+              </div> 
             </div>
           </div>
         </div>
