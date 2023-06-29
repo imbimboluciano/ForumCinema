@@ -1,5 +1,6 @@
 from typing import Any, Dict
 from django.db import models
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect, get_list_or_404
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from .models import *
@@ -199,3 +200,62 @@ class SearchDiscoverListView(LoginRequiredMixin,ListView):
                     reviews_notfollowing.append(review)
 
         return reviews_notfollowing
+    
+
+class GroupsListView(LoginRequiredMixin, ListView):
+    model = CinemaClub
+    template_name = "forum/groups_page.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        my_club = []
+        for cinemaclub in self.model.objects.all():  
+            if cinemaclub.creator == self.request.user or self.request.user in cinemaclub.members.all():
+                my_club.append(cinemaclub)
+        
+        return my_club
+
+
+
+@login_required
+def create_group(request):
+    if request.method == "POST":
+        user = request.user
+        form = GroupsCreateForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False) 
+            comment.creator = user
+            comment.save()
+            form.save()
+            return redirect('forum:groupspage')
+    else:
+        form = GroupsCreateForm()
+    return render(request, 'forum/create_group.html', {'form': form})
+
+
+class GroupDetailView(LoginRequiredMixin,DetailView):
+    model = CinemaClub
+    template_name = "forum/group_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["posts"] = Post.objects.all().filter(group_id = self.kwargs["pk"]) 
+        return context
+    
+
+
+@login_required
+def create_post_group(request, group):
+    if request.method == "POST":
+        user = request.user
+        form = PostCreateForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False) 
+            post.creator = user
+            post.group = get_object_or_404(CinemaClub, pk = group)
+            post.date_posted = timezone.now()
+            post.save()
+            form.save()
+            return HttpResponseRedirect(reverse("forum:detailgroup", args=[group]))
+    else:
+        form = PostCreateForm()
+    return render(request, 'forum/create_post.html', {'form': form})

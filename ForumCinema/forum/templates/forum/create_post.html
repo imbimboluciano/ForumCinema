@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Crea Gruppo{% endblock title %}
+{% load crispy_forms_tags %}
+
+{% block content %} 
+    <h2>Crea Gruppo</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <a type = "button" class = "btn btn-dark" href="">Annulla</a>
+        <button class = "btn btn-outline-dark" type="submit">Crea</button>
+    </form>
+{% endblock content %}

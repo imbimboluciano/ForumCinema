@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block mycss %}
+<link rel="stylesheet" href="{% static '/css/followers.css' %}">
+
+<script src="{% static '/script/followers.js' %}"></script>  
+{% endblock mycss %}
+
+{% block content %}
+<div class = "container w-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+          <div class="card">
+            <div class="rounded-top text-white d-flex flex-row">
+                <img src = "{{object.copertina.image}}" class ="w-100">
+            </div>
+            <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                <div class = "row d-flex justify-content-between">
+                    <div class = "col-lg-8">
+                        <div class="d-flex">
+                            <div>
+                                <p class="mb-1 h5">{{object.nome}}</p>
+                                <p class="small text-muted mb-0">Creato da {{object.creator.username}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-lg-4">
+                        <div class="d-flex justify-content-end text-center">
+                            <div>
+                              <p class="mb-1 h5">{{object.members.all.count}}</p>
+                              <p class="small text-muted ml-0">Membri</p>
+                            </div>
+                          </div>
+                    </div>
+                </div>  
+              
+            </div>
+            <div class="card-body p-4 text-black">
+                <div class = "container">
+                    <div class = "row">
+                        <div class ="col"> 
+                            <div class="tab container p-0">
+                                <div class = "row mrl-0">
+                                    <div class = "col w-100">
+                                        <button class="tablinks w-100 " onclick="openCity(event, 'Post')" id="defaultOpen">Post</button> </div>
+                                    <div class = "col"> 
+                                        <button class="tablinks w-100" onclick="openCity(event, 'Sondaggi')">Sondaggi</button>
+                                    </div>
+                                </div>
+                              </div>
+                              
+                              <div id="Post" class="tabcontent">
+                                {% if request.user == object.creator %}
+                                <a type="button" class="btn btn-primary me-1 mb-4" href ="{% url 'forum:createpost' object.pk %}">Crea Post</a>
+                                {% endif %}
+                                <div class = "row d-flex justify-content-start">
+                                <div class="col-11 my-2">
+
+                                    <ul class="list-unstyled ">
+                                        {% for post in posts %}
+                                      <li class="d-flex justify-content-between mb-4">
+                                        <img src="{{ post.creator.userprofile.avatar.image }}" alt="avatar"
+                                          class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60" height="60">
+                                        <div class="card">
+                                          <div class="card-header d-flex justify-content-between p-3">
+                                            <p class="fw-bold mb-0">{{ post.creator.username }}</p>
+                                            <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{post.date_posted}}</p>
+                                          </div>
+                                          <div class="card-body">
+                                            <p class = "h4 text-center">
+                                                {{ post.titolo }}
+                                            </p>
+                                            <p class="mb-0">
+                                             {{post.descrizione}}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </li>
+                                      {% endfor %}
+                                    </ul>
+                            
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div id="Sondaggi" class="tabcontent">
+                                {% for utenti in following.all %}
+                                <div class="d-flex align-items-middle" style="border-radius: 15px;">
+                                <div class="card-body justify-content-between">
+                                <div class="d-flex text-black">
+                                        <div class="flex-grow-1 ms-3 ">
+                                            <img src="{{utenti.avatar.image}}" alt="avatar" class="img-fluid" style="width: 50px; height:40px; border-radius:10px; margin-right:3px"> 
+                                            <a class= "ml-2 h5 font-weight-bold" style = "text-decoration:none" href="{% url 'forum:profilo' utenti.user.pk %}">{{ utenti.user.username }}</a>
+                                        </div>
+                                        <a type="button" class="btn btn-primary me-1" href ="{% url 'forum:profilo' utenti.user.pk %}">Visita</a>
+                                </div>
+                                </div>
+                                </div>
+                                {% endfor %}
+                              </div>
+
+
+                        </div>
+                        <div class = "col-4"> 
+                            <div class = "container ">
+                                <div class = "row">
+                                <div class="card mb-4 mb-md-0 mt-2 overflow-auto">
+                                  <div class="card-body">
+                                      <div class="d-flex justify-content-center align-items-center mb-4">
+                                          <p class="lead fw-normal mb-0">Membri</p>
+                                        </div>
+                                                 
+                                  {% for utenti in object.members.all %}
+                                  <div class="d-flex align-items-middle" style="border-radius: 15px;">
+                                  <div class="card-body justify-content-between">
+                                    <div class="d-flex text-black">
+                                            <div class="flex-grow-1 ms-3 ">
+                                              <img src="{{utenti.userprofile.avatar.image}}" alt="avatar" class="img-fluid" style="width: 50px; height:40px; border-radius:10px; margin-right:3px"> 
+                                              <a class= "ml-2 h5 font-weight-bold" style = "text-decoration:none" href="{% url 'forum:profilo' utenti.pk %}">{{ utenti.username }}</a>
+                                            </div>
+                                            <a type="button" class="btn btn-primary me-1" href ="{% url 'forum:profilo' utenti.pk %}">Visita</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                  {% endfor %}
+                              
+                                
+                                    <div>
+                                    </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </div>
+</div>
+{% endblock content %}

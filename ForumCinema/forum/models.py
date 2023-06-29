@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+
+
 # Create your models here.
 class Citazione(models.Model):
     descrizione = models.CharField(max_length=500)
@@ -53,7 +55,33 @@ class UserProfile(models.Model):
     def number_of_following(self):
         return self.following.count()
 
+
+class CinemaClub(models.Model):
+    nome = models.CharField(max_length=200)
+    bio = models.CharField(max_length=700)
+    copertina = models.ForeignKey(Avatar, on_delete= models.CASCADE)
+    creator = models.ForeignKey(User, on_delete= models.CASCADE)
+    members = models.ManyToManyField(User,related_name="members", related_query_name="members")
+
+class Post(models.Model):
+    titolo = models.CharField(max_length=100)
+    descrizione = models.CharField(max_length=500)
+    creator = models.ForeignKey(User, on_delete= models.CASCADE)
+    date_posted = models.DateTimeField()
+    group = models.ForeignKey(CinemaClub, on_delete=models.CASCADE)
     
+class Question(models.Model):
+    creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name="questions")
+    question_text = models.CharField(max_length=100)
+    group = models.ForeignKey(CinemaClub,on_delete= models.CASCADE )
+
+
+class Answers(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
+    answer_text = models.CharField(max_length=100)
+    counter = models.IntegerField(default=0)
+
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

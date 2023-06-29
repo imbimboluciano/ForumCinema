@@ -1,4 +1,4 @@
-from forum.models import Movie, Citazione, User, UserProfile, Avatar
+from forum.models import *
 from PyMovieDb import IMDB
 import json
 import requests
@@ -16,10 +16,8 @@ def citazione_table():
         citazione.save()
 
 def erase_movie_table():
-    Movie.objects.all().delete()
-    Citazione.objects.all().delete()
-    User.objects.all().delete()
-    UserProfile.objects.all().delete()
+    CinemaClub.objects.all().delete()
+   
 
 
 
@@ -49,3 +47,5 @@ def init_avatar_table():
         avatar = Avatar()
         avatar.image = url_image + movie["backdrop_path"]
         avatar.save()
+
+    

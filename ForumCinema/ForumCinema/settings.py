@@ -146,5 +146,5 @@ LOGIN_REDIRECT_URL = "/?login=ok" #redireziona alla home, ma con un parametro GE
 LOGIN_URL = "/login/?auth=notok"
 
 SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
-SESSION_TIMEOUT_REDIRECT = 'logout/'
+SESSION_TIMEOUT_REDIRECT = '/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True

@@ -24,3 +24,18 @@ class ReviewUpdateForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['descrizione']
+
+class GroupsCreateForm(forms.ModelForm):
+    class Meta:
+        model = CinemaClub
+        fields = ["nome", "bio", "copertina", "members"]
+    
+    members = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+
+class PostCreateForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["titolo", "descrizione"]

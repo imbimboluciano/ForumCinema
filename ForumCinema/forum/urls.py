@@ -32,7 +32,11 @@ urlpatterns = [
     path("modificareview/<int:pk>/", ReviewUpdateView.as_view(), name = "modificareview"),
     path("discover/", DiscoverView.as_view(), name = "discover"),
     path("followerlist/<pk>", FollowListView.as_view(), name = "followlist" ),
-    path("allfavoritiesmovie/<pk>", AllFavoritiesMovieList.as_view(), name = "allfavoritiesmovie" )
+    path("allfavoritiesmovie/<pk>", AllFavoritiesMovieList.as_view(), name = "allfavoritiesmovie" ),
+    path("groupspage/", GroupsListView.as_view(), name = "groupspage"),
+    path("creagroup/", create_group, name = "creategroup"),
+    path("groupdetail/<pk>/",GroupDetailView.as_view(), name = "detailgroup"),
+    path("createpost/<int:group>/", create_post_group, name = "createpost")
 
 
 

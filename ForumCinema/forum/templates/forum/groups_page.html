@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block content %}
+<div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-top h-100">
+        <div class="col-lg-7 mx-2">
+            <div class = "h3">
+                I tuoi CinemaClub
+            </div>
+            <div class="row row-cols-2 row-cols-md-2 g-4">
+                {% for cinemaclub in object_list %}
+                    <div class="col">
+                    <div class="card h-100">
+                        <img src="{{cinemaclub.copertina.image}}" class="card-img-top"/>
+                        <div class="card-body">
+                        <h5 class="card-title text-center">{{ cinemaclub.nome }}</h5>
+                        <p class="card-text">
+                            {{ cinemaclub.bio }}
+                        </p>
+                        <a type="button" class="btn btn-primary " href="{% url 'forum:detailgroup' cinemaclub.pk %}">Entra</a>
+                        </div>
+                        <div class="card-body p-4 d-flex justify-content-center">        
+                           
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Creato da {{ cinemaclub.creator.username }}</small>
+                          </div>
+                    </div>
+                    </div>
+                    {% empty %}
+                    <p>Non fai parte di nessun gruppo</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-4 secondsidebar">
+            <div class="content-wrapper" >
+                <div class="card d-flex align-items-middle" style="border-radius: 15px;">
+                    <div class="card-body p-4 d-flex justify-content-between">        
+                        <a type="button" class="btn btn-dark " href="{% url 'forum:creategroup' %}">Crea il tuo CinemaClub</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+
+{% block myscript %}
+<script src="{% static '/script/sidebar.js' %}"></script>
+
+
+{% endblock myscript %}
+
+
