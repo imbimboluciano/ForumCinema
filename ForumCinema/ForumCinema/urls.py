@@ -30,6 +30,7 @@ urlpatterns = [
 	path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path('changepassword/',auth_views.PasswordChangeView.as_view(template_name = "change_password.html", success_url = '/'),name='change_password'),
     path('forum/', include("forum.urls")),
+    path('polls/', include("polls.urls"))
 
 
 ]

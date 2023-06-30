@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+import secrets
 
 
 
@@ -70,16 +71,6 @@ class Post(models.Model):
     date_posted = models.DateTimeField()
     group = models.ForeignKey(CinemaClub, on_delete=models.CASCADE)
     
-class Question(models.Model):
-    creator = models.ForeignKey(User,on_delete=models.CASCADE, related_name="questions")
-    question_text = models.CharField(max_length=100)
-    group = models.ForeignKey(CinemaClub,on_delete= models.CASCADE )
-
-
-class Answers(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
-    answer_text = models.CharField(max_length=100)
-    counter = models.IntegerField(default=0)
 
 
 

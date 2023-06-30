@@ -36,7 +36,10 @@ urlpatterns = [
     path("groupspage/", GroupsListView.as_view(), name = "groupspage"),
     path("creagroup/", create_group, name = "creategroup"),
     path("groupdetail/<pk>/",GroupDetailView.as_view(), name = "detailgroup"),
-    path("createpost/<int:group>/", create_post_group, name = "createpost")
+    path("createpost/<int:group>/", create_post_group, name = "createpost"),
+    path("cancellareview/<pk>", EliminaReviewView.as_view(), name = "cancellareview"),
+    path("cancellacommento/<pk>/<int:review>", EliminaCommentView.as_view(), name = "cancellacommento"),
+    path("cancellapost/<pk>/<int:group>", EliminaPostView.as_view(), name = "cancellapost")
 
 
 

@@ -2,13 +2,16 @@ from typing import Any, Dict
 from django.db import models
 from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect, get_list_or_404
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from .models import *
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.contrib import messages
+from django.core.paginator import Paginator
+from polls.models import Poll
 
 
 class CreateReviewView(LoginRequiredMixin,CreateView):
@@ -239,6 +242,7 @@ class GroupDetailView(LoginRequiredMixin,DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["posts"] = Post.objects.all().filter(group_id = self.kwargs["pk"]) 
+        context["polls"] = Poll.objects.all().filter(group_id = self.kwargs["pk"]) 
         return context
     
 
@@ -259,3 +263,41 @@ def create_post_group(request, group):
     else:
         form = PostCreateForm()
     return render(request, 'forum/create_post.html', {'form': form})
+
+
+class EliminaEntitaView(LoginRequiredMixin,DeleteView):
+
+    template_name = "forum/elimina_elemento.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(EliminaEntitaView, self).get_context_data(**kwargs)
+        entita = Post
+        if self.model == Review:
+            entita = Review
+        elif self.model == Comment:
+            entita = Comment
+        
+        context["entita"] = entita
+        return context
+    
+    def get_success_url(self) -> str:
+        if self.model == Review:
+            return reverse("forum:profilo", args=[self.request.user.pk])
+        elif self.model == Post:
+            return reverse("forum:detailgroup", args=[self.kwargs["group"]])
+        elif self.model == Comment:
+            return reverse("forum:detailreview", args=[self.kwargs["review"]])
+           
+
+class EliminaReviewView(EliminaEntitaView):
+    model = Review
+
+class EliminaCommentView(EliminaEntitaView):
+    model = Comment
+
+class EliminaPostView(EliminaEntitaView):
+    model = Post
+
+
+
+

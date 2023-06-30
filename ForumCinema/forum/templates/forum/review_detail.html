@@ -68,7 +68,7 @@
               </div>
                     <div class="flex-grow-1 ms-3">
                       <h5 class="mb-1 font-weight-bold">{{ comment.user }}</h5>
-                      <strong>{{ comment.date_posted }}</strong>
+                      
                           <div class="d-flex  rounded-3 p-2 mb-2"
                             style="background-color: #efefef;">
                             <div>
@@ -76,6 +76,21 @@
                             </div>
                           </div>
                     </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="container">
+              <div class = "row align-items-center">
+                <div class = "col-8 "> 
+                  {{ comment.date_posted }}
+                </div>
+                <div class = "col-4 d-flex align-items-end">
+                  {% if request.user == comment.user %}
+                  <a type="button" class="btn btn-outline-success me-1 flex-grow-1" href ="">Modifica</a>
+                  <a type="button" class="btn btn-outline-danger me-1 flex-grow-1" href ="{% url 'forum:cancellacommento' comment.pk object.pk %}">Elimina</a>
+                  {% endif %}
+                </div>
+              </div> 
             </div>
           </div>
         </div>

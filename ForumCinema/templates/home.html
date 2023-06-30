@@ -2,12 +2,35 @@
 
 {% load crispy_forms_tags %}
 {% load static %}
+{% block mycss %}
+<style>
+  .affix {
+      top: 40px;
+      z-index: 9999 !important;
+      width: 100%
+  }
+  .affix-top {
+    width: 100%;
+  }
+  
+  .affix-bottom {
+    position: absolute;
+    width: 100%;  
+  }
+  
+</style>
+
+{% endblock mycss %}
+
+
+
+
 
 
 {% block content %}
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-top h-100">
-      <div class="col-lg-7">
+      <div class="col-lg-7" data-bs-spy="scroll" data-bs-target="#secondsidebar" data-bs-offset="0" tabindex="0" >
         {% for review in object_list %}
         <div class="card mb-3" style="border-radius: 15px;">
           <div class="card-body p-4">
@@ -49,8 +72,8 @@
         </div>
         {% endfor %}
       </div>
-      <div class="col-5 secondsidebar">
-        <div class="content-wrapper" >
+      <nav class="col-5" id="secondsidebar" >
+        <div class="" >
         <div class="card d-flex align-items-middle" style="border-radius: 15px;">
           <div class="card-body p-4 d-flex justify-content-between">
             {% if user.is_authenticated %}
@@ -92,7 +115,7 @@
         </div>
     
       </div>
-    </div>
+    </nav>
   </div>
 
 
@@ -101,6 +124,7 @@
 
 {% block myscript %}
 <script src="{% static '/script/sidebar.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 
 {% endblock myscript %}
