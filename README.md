@@ -1,6 +1,6 @@
 # MovieCinemaClub
 
-MovieCinemaClub is a review forums app. You have to register in this app to publish review, to vote and comment user's review (like/unlike). Users can also create private group where share news and polls. 
+MovieCinemaClub is a review forums app. You have to register in this app to publish review, to vote and comment user's review (like/unlike). Users can also create private group where share news and polls (In this moment only creators of group can share news and create polls).
 
 # Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
