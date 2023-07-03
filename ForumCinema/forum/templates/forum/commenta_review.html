@@ -41,7 +41,7 @@
                     <div class="card d-flex align-items-center mb-2" style="border-radius: 15px;">
                         <div class="card-body p-4 ">
                                 <img src="{{request.user.userprofile.avatar.image}}" alt="avatar"
-                                    class="img-fluid w-25 mb-2" style="border-radius: 10px;">
+                                    class="img-fluid w-25 mb-3" style="border-radius: 10px;">
                                 <form method="post" > {% csrf_token %}
                                     {{form | crispy}}
                                     <input type="submit" class="btn btn-dark" value="Commenta">

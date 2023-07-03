@@ -4,7 +4,7 @@
 {% block mycss %}
 <link rel="stylesheet" href="{% static '/css/followers.css' %}">
 
-<script src="{% static '/script/followers.js' %}"></script>  
+
 {% endblock mycss %}
 
 {% block content %}
@@ -46,7 +46,7 @@
                 <div class="tab container p-0">
                     <div class = "row mrl-0">
                         <div class = "col w-100">
-                            <button class="tablinks w-100 " onclick="openCity(event, 'Followers')" id="defaultOpen">Seguaci</button> </div>
+                            <button class="tablinks w-100 " onclick="openCity(event, 'Followers')" id="defaultOpen" >Seguaci</button> </div>
                         <div class = "col"> 
                             <button class="tablinks w-100" onclick="openCity(event, 'Following')">Seguiti</button>
                         </div>
@@ -94,3 +94,12 @@
             
       </div>
 {% endblock content %}
+
+{% block myscript %}
+<script src="{% static '/script/followers.js' %}"></script>  
+
+
+{% endblock myscript %}
+
+
+

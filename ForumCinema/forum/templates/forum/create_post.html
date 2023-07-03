@@ -1,14 +1,129 @@
 {% extends 'base.html' %}
 
-{% block title %}Crea Gruppo{% endblock title %}
+{% load static %}
+{% load forum_extras %}
 {% load crispy_forms_tags %}
 
-{% block content %} 
-    <h2>Crea Gruppo</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form | crispy }}
-        <a type = "button" class = "btn btn-dark" href="">Annulla</a>
-        <button class = "btn btn-outline-dark" type="submit">Crea</button>
-    </form>
+{% block content %}
+<div class = "container w-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col">
+          <div class="card">
+            <div class="rounded-top text-white d-flex flex-row">
+                <img src = "{{group.copertina.image}}" class ="w-100" style = "height:450px">
+            </div>
+            <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                <div class = "row d-flex justify-content-between">
+                    <div class = "col-lg-8">
+                        <div class="d-flex">
+                            <div>
+                                <p class="mb-1 h5">{{group.nome}}</p>
+                                <p class="small text-muted mb-0">Creato da {{group.creator.username}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class = "col-lg-4">
+                        <div class="d-flex justify-content-end text-center">
+                            <div>
+                              <p class="mb-1 h5">{{group.number_of_members}}</p>
+                              <p class="small text-muted ml-0">Membri</p>
+                            </div>
+                          </div>
+                    </div>
+                </div>  
+              
+            </div>
+            <div class="card-body p-4 text-black">
+                <div class = "container">
+                    <div class = "row">
+                        <div class ="col"> 
+                            
+                            <div class="card mb-2" style="border-radius: 15px;">
+                                <div class="flex-shrink-0 card-header ">
+                                    <div class="row justify-content-start align-items-middle g-2">
+                                        <div class="col-2">
+                                            <img src="{{request.user.userprofile.avatar.image}}"
+                                          alt="Generic placeholder image" class="img-fluid"
+                                          style="width: 80px; height:50px; border-radius: 10px;">
+                                        </div>
+                                    </div>
+                                    
+                                    </div>
+                                    
+                                <div class="card-body p-4">
+                                  <div class="d-flex text-black">
+                                    
+                                          <div class="flex-grow-1 ms-3">
+                                            
+                                            
+                                            <form method="post" > {% csrf_token %}
+                                              {{ form | crispy}}
+                                              <div class = "d-flex justify-content-end"> 
+                                                <a type = "button" class = "btn btn-outline-dark mx-2" href="{% url 'forum:detailgroup' group.pk %}">Annulla</a>
+                                                <input type="submit" class="btn btn-dark" value="Conferma">
+                                              </div>
+                                            </form>
+                                          </div>
+                                  </div>
+                                </div>
+                             
+                                
+                        </div>
+                    </div>
+                        <div class = "col-4"> 
+
+                               
+                            <div class = "container ">
+                                <div class = "row">
+                                <div class="card mb-4 mb-md-0 mt-2 overflow-auto">
+                                  <div class="card-body">
+                                      <div class="d-flex justify-content-center align-items-center mb-4">
+                                          <p class="lead fw-normal mb-0">Membri</p>
+                                        </div>
+                                        <div class="d-flex justify-content-start align-items-center mb-4">
+                                            <p class="lead fw-normal mb-0">Admin</p>
+                                            
+                                          </div>
+                                    <div class="d-flex align-items-middle" style="border-radius: 15px;">
+                                          <div class="card-body justify-content-between">
+                                            <div class="d-flex text-black">
+                                                    <div class="flex-grow-1 ms-3 ">
+                                                      <img src="{{group.creator.userprofile.avatar.image}}" alt="avatar" class="img-fluid" style="width: 50px; height:40px; border-radius:10px; margin-right:3px"> 
+                                                      <a class= "ml-2 h5 font-weight-bold" style = "text-decoration:none" href="{% url 'forum:profilo' group.creator.pk  %}">{{ object.creator.username }}</a>
+                                                    </div>
+                                                    <a type="button" class="btn btn-primary me-1" href ="{% url 'forum:profilo' group.creator.pk %}">Visita</a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-start align-items-center mb-4">
+                                            <p class="lead fw-normal mb-0">Utenti</p>
+                                            
+                                          </div>
+                                  {% for utenti in group.members.all %}
+                                  <div class="d-flex align-items-middle" style="border-radius: 15px;">
+                                  <div class="card-body justify-content-between">
+                                    <div class="d-flex text-black">
+                                            <div class="flex-grow-1 ms-3 ">
+                                              <img src="{{utenti.userprofile.avatar.image}}" alt="avatar" class="img-fluid" style="width: 50px; height:40px; border-radius:10px; margin-right:3px"> 
+                                              <a class= "ml-2 h5 font-weight-bold" style = "text-decoration:none" href="{% url 'forum:profilo' utenti.pk %}">{{ utenti.username }}</a>
+                                            </div>
+                                            <a type="button" class="btn btn-primary me-1" href ="{% url 'forum:profilo' utenti.pk %}">Visita</a>
+                                    </div>
+                                  </div>
+                                </div>
+                                  {% endfor %}
+                              
+                                
+                                    <div>
+                                    </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </div>
+</div>
 {% endblock content %}

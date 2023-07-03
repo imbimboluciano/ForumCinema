@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from django.urls import reverse_lazy
 from pathlib import Path,os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,7 +145,7 @@ EMAIL_USE_TLS = True
 PASSWORD_RESET_TIMEOUT = 14400
 
 LOGIN_REDIRECT_URL = "/?login=ok" #redireziona alla home, ma con un parametro GET per capire se utente anonimo o autenticato
-LOGIN_URL = "/login/?auth=notok"
+LOGIN_URL = reverse_lazy('login')
 
 SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
 SESSION_TIMEOUT_REDIRECT = '/'

@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from .forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 from django.http import HttpResponse   
 from django.contrib.auth import login, authenticate, get_user_model
@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage 
 from django.utils.encoding import force_bytes, force_str
 from forum.models import Movie
+
 
 def homepage(request):
     return render(request, template_name= "home.html")
@@ -38,7 +39,7 @@ def signup(request):
             to_email = form.cleaned_data.get('email')  
             email = EmailMessage(mail_subject, message, to=[to_email])  
             email.send()  
-            return HttpResponse('Please confirm your email address to complete the registration')  
+            return redirect('login')  
     else:  
         form = UserCreationForm()  
     

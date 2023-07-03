@@ -8,6 +8,11 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('bio', 'citazione', 'favorities', 'avatar')
+    
+    favorities = forms.ModelMultipleChoiceField(
+        queryset=Movie.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -19,11 +24,17 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['descrizione']
+        widgets = {
+            'descrizione': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'cols': 20}),
+        }
 
 class ReviewUpdateForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['descrizione']
+        widgets = {
+            'descrizione': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'cols': 20}),
+        }
 
 class GroupsCreateForm(forms.ModelForm):
     class Meta:
@@ -39,3 +50,6 @@ class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ["titolo", "descrizione"]
+        widgets = {
+            'descrizione': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'cols': 20}),
+            }

@@ -1,7 +1,6 @@
 from typing import Any, Dict
-from django.db import models
 from django.db.models.query import QuerySet
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect, get_list_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from .models import *
 from django.urls import reverse_lazy, reverse
@@ -9,8 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.contrib import messages
-from django.core.paginator import Paginator
 from polls.models import Poll
 
 
@@ -22,6 +19,7 @@ class CreateReviewView(LoginRequiredMixin,CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.instance.date_published = timezone.now()
         return super().form_valid(form)
 
 class ReviewListView(ListView):
@@ -59,7 +57,6 @@ class ReviewDetailView(LoginRequiredMixin,DetailView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-
         likes_connected = get_object_or_404(Review, id=self.kwargs['pk'])
         liked = False
         if likes_connected.likes.filter(id=self.request.user.id).exists():
@@ -67,6 +64,10 @@ class ReviewDetailView(LoginRequiredMixin,DetailView):
         data['number_of_likes'] = likes_connected.number_of_likes()
         data['post_is_liked'] = liked
         return data
+    
+    def get_redirect_field_name(self) -> str:
+        return None
+
     
 
 class ProfiloDetailView(LoginRequiredMixin,DetailView):
@@ -80,6 +81,10 @@ class ProfiloDetailView(LoginRequiredMixin,DetailView):
         context["firstfourfavoritiesmovie"] = userprofile.favorities.all()[:4]
         print(context['firstfourfavoritiesmovie'])
         return context
+    
+    def get_redirect_field_name(self) -> str:
+        return None
+    
 
 @login_required
 def update_profile(request):
@@ -150,7 +155,10 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewUpdateForm
     template_name = "forum/modifica_review.html"
-    success_url = reverse_lazy("home")
+    
+    def get_success_url(self) -> str:
+       profile = reverse("forum:profilo", kwargs={"pk": self.request.user.pk})
+       return profile
 
 
 class DiscoverView(LoginRequiredMixin,ListView):
@@ -190,7 +198,7 @@ class AllFavoritiesMovieList(LoginRequiredMixin,DetailView):
 
 class SearchDiscoverListView(LoginRequiredMixin,ListView):
     model = Review
-    template_name = "forum/search_result.html"
+    template_name = "forum/result_search_page.html"
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
@@ -243,6 +251,7 @@ class GroupDetailView(LoginRequiredMixin,DetailView):
         context = super().get_context_data(**kwargs)
         context["posts"] = Post.objects.all().filter(group_id = self.kwargs["pk"]) 
         context["polls"] = Poll.objects.all().filter(group_id = self.kwargs["pk"]) 
+        
         return context
     
 
@@ -262,7 +271,7 @@ def create_post_group(request, group):
             return HttpResponseRedirect(reverse("forum:detailgroup", args=[group]))
     else:
         form = PostCreateForm()
-    return render(request, 'forum/create_post.html', {'form': form})
+    return render(request, 'forum/create_post.html', {'form': form, 'group': get_object_or_404(CinemaClub, pk=group)})
 
 
 class EliminaEntitaView(LoginRequiredMixin,DeleteView):
@@ -271,11 +280,11 @@ class EliminaEntitaView(LoginRequiredMixin,DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super(EliminaEntitaView, self).get_context_data(**kwargs)
-        entita = Post
+        entita = "Post"
         if self.model == Review:
-            entita = Review
+            entita = "Review"
         elif self.model == Comment:
-            entita = Comment
+            entita = "Comment"
         
         context["entita"] = entita
         return context
@@ -299,5 +308,48 @@ class EliminaPostView(EliminaEntitaView):
     model = Post
 
 
+class ModificaCommentView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "forum/modifica_commento.html"
+    
+    def get_success_url(self) -> str:
+       profile = reverse("forum:detailreview", kwargs={"pk": self.object.review.pk})
+       return profile
+    
+    def form_valid(self, form):
+        form.instance.date_posted = timezone.now()
+        return super().form_valid(form)
+    
 
+class ModificaPostView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostCreateForm
+    template_name = "forum/modifica_post.html"
+    
+    def get_success_url(self) -> str:
+       profile = reverse("forum:detailgroup", kwargs={"pk": self.object.group.pk})
+       return profile
+    
+    def form_valid(self, form):
+        form.instance.date_posted = timezone.now()
+        return super().form_valid(form)
+    
+@login_required
+def search(request):
+    if 'search' in request.GET:
+        search_term = request.GET['search']
+        if search_term:
+            return HttpResponseRedirect(reverse("forum:risultatiricerca", args=[search_term]))
+        
+    return HttpResponseRedirect(reverse("forum:discover"))
 
+@login_required
+def PostLike(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+
+    return HttpResponseRedirect(reverse('forum:detailgroup', args=[post.group.pk]))

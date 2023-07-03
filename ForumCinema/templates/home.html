@@ -46,6 +46,9 @@
                 class="img-fluid " style="width: 50px; height:40px; border-radius:10px"> 
                 <a class = "mb-1 ml-2 h5 font-weight-bold"  style="text-decoration:none; margin-left:3px"  href="{%url 'forum:profilo' review.user.pk %}">{{review.user.username}}</a> </div>
                 </div>
+                <div class="col">
+                  <p> {{ review.date_published }}</p>
+                </div>
                 <p class="mb-2 pb-1" style="color: #2b2a2a;">{{review.movie.titolo}}</p>
                 <div class="d-flex  rounded-3 p-2 mb-2"
                   style="background-color: #efefef;">
@@ -61,8 +64,13 @@
             <div class="container">
               <div class = "row align-items-center">
                 <div class = "col-8 "> 
+                  {% if review.number_of_likes == 0 and review.comments.count == 0%}
+                  <strong class="text-secondary mx-1">Nessuna interazione</strong>
+                  {% else %}
                   <strong class="text-secondary mx-1">{{ review.number_of_likes }} Mi Piace</strong>
-                   <strong class="text-secondary">{{ review.comments.count }} Commenti</strong></div>
+                   <strong class="text-secondary">{{ review.comments.count }} Commenti</strong>
+                   {% endif %}
+                  </div>
                 <div class = "col-4 d-flex align-items-end">
                   <a type="button" class="btn btn-outline-primary me-1 flex-grow-1" href ="{%url 'forum:detailreview' review.pk %}">Dettagli</a>
                 </div>

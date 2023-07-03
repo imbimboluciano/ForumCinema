@@ -86,7 +86,7 @@
                 </div>
                 <div class = "col-4 d-flex align-items-end">
                   {% if request.user == comment.user %}
-                  <a type="button" class="btn btn-outline-success me-1 flex-grow-1" href ="">Modifica</a>
+                  <a type="button" class="btn btn-outline-success me-1 flex-grow-1" href ="{% url 'forum:updatecomment' comment.pk%}">Modifica</a>
                   <a type="button" class="btn btn-outline-danger me-1 flex-grow-1" href ="{% url 'forum:cancellacommento' comment.pk object.pk %}">Elimina</a>
                   {% endif %}
                 </div>

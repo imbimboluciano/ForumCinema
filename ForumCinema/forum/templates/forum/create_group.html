@@ -4,11 +4,26 @@
 {% load crispy_forms_tags %}
 
 {% block content %} 
-    <h2>Crea Gruppo</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form | crispy }}
-        <a type = "button" class = "btn btn-dark" href="{% url 'forum:groupspage' %}">Annulla</a>
-        <button class = "btn btn-outline-dark" type="submit">Crea</button>
-    </form>
+<div class="container">
+    <div class="row justify-content-center align-items-center g-2">
+        <div class="col-lg-6"> 
+            <div class="card mt-4">
+              <div class="card-body">
+                <h4 class="card-title text-center">Fonda CinemaClub</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+
+                    <div class =" h4 mt-2 d-flex justify-content-end">
+                        <a type = "button" class = "btn btn-outline-dark mx-2" href="{% url 'forum:groupspage' %}">Annulla</a>
+                        <button class = "btn btn-dark" type="submit">Fonda</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+   
 {% endblock content %}

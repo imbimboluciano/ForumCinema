@@ -29,8 +29,11 @@
               </div>
               <form method="post" > {% csrf_token %}
                 {{ form | crispy}}
-              <a type = "button" class = "btn btn-outline-dark" href="{% url 'forum:profilo' request.user.pk %}">Annulla</a>
-            <input type="submit" class="btn btn-dark" value="Conferma">
+                <div class = "d-flex justify-content-end"> 
+                  <a type = "button" class = "btn btn-outline-dark mx-2" href="{% url 'forum:profilo' request.user.pk %}">Annulla</a>
+                  <input type="submit" class="btn btn-dark" value="Conferma">
+                </div>
+              </form>
           </div>
         </div>
          

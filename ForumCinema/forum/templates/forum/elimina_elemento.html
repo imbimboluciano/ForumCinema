@@ -4,13 +4,13 @@
 
 {% block content %} 
 
-<h1>Cancellazione di {{entita}}</h1>
-
-<br>
 
 <form method="post">{% csrf_token %}
      
-<p>Sicuro di voler cancellare "{{ object }}"?</p>
+    {% if entita == "Comment" %}
+    <p>Sicuro di voler cancellare il commento {{ object }}?</p>
+    {% endif %}
+
  
     <input type="submit" value="Conferma">
 </form>
