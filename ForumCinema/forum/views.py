@@ -10,18 +10,19 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from polls.models import Poll
 
-
-class CreateReviewView(LoginRequiredMixin,CreateView):
-    model = Review
-    template_name = "forum/create_review.html"
-    success_url = reverse_lazy("home")
-    fields = ["movie", "descrizione"]
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.date_published = timezone.now()
-        return super().form_valid(form)
-
+@login_required
+def create_review(request):
+    if request.method == "POST":
+        user = request.user
+        form = CreateReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False) 
+            review.user = user
+            review.date_published = timezone.now()
+            review.save()
+            form.save()
+            return redirect('home')
+    
 class ReviewListView(ListView):
     model = Review
     template_name = "home.html"
@@ -49,6 +50,7 @@ class ReviewListView(ListView):
             if user.userprofile in self.request.user.userprofile.followers.all():
                 randomuser.append(user.pk)
         context['randomuser'] = User.objects.all().exclude(pk__in=randomuser).exclude(pk=self.request.user.pk).exclude(is_staff=True)
+        context['form'] = CreateReviewForm()
         return context
 
 class ReviewDetailView(LoginRequiredMixin,DetailView):
@@ -172,7 +174,8 @@ class DiscoverView(LoginRequiredMixin,ListView):
         reviews_notfollowing = []
         for review in self.model.objects.all():
             if review.user.userprofile not in self.request.user.userprofile.followers.all():
-                reviews_notfollowing.append(review)
+                if review.user != self.request.user:
+                    reviews_notfollowing.append(review)
 
         return reviews_notfollowing
     
@@ -224,23 +227,25 @@ class GroupsListView(LoginRequiredMixin, ListView):
                 my_club.append(cinemaclub)
         
         return my_club
+    
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['form'] = GroupsCreateForm(user = self.request.user.pk)
+        return context
 
+    
 
 
 @login_required
 def create_group(request):
     if request.method == "POST":
-        user = request.user
-        form = GroupsCreateForm(request.POST)
+        form = GroupsCreateForm(request.POST, user = request.user.pk)
         if form.is_valid():
-            comment = form.save(commit=False) 
-            comment.creator = user
-            comment.save()
+            group = form.save(commit=False) 
+            group.creator = request.user
+            group.save()
             form.save()
             return redirect('forum:groupspage')
-    else:
-        form = GroupsCreateForm()
-    return render(request, 'forum/create_group.html', {'form': form})
 
 
 class GroupDetailView(LoginRequiredMixin,DetailView):
@@ -284,7 +289,9 @@ class EliminaEntitaView(LoginRequiredMixin,DeleteView):
         if self.model == Review:
             entita = "Review"
         elif self.model == Comment:
-            entita = "Comment"
+            entita = "Commento"
+        elif self.model == CinemaClub:
+            entita = "CinemaClub"
         
         context["entita"] = entita
         return context
@@ -296,6 +303,8 @@ class EliminaEntitaView(LoginRequiredMixin,DeleteView):
             return reverse("forum:detailgroup", args=[self.kwargs["group"]])
         elif self.model == Comment:
             return reverse("forum:detailreview", args=[self.kwargs["review"]])
+        elif self.model == CinemaClub:
+            return reverse("forum:groupspage")
            
 
 class EliminaReviewView(EliminaEntitaView):
@@ -306,6 +315,9 @@ class EliminaCommentView(EliminaEntitaView):
 
 class EliminaPostView(EliminaEntitaView):
     model = Post
+    
+class EliminaGroupView(EliminaEntitaView):
+    model = CinemaClub
 
 
 class ModificaCommentView(LoginRequiredMixin, UpdateView):

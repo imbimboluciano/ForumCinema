@@ -86,11 +86,22 @@
           <div class="card-body p-4 d-flex justify-content-between">
             {% if user.is_authenticated %}
             <div class = "h5 mt-2"> Benvenuto  <a class = "text-black" style = "text-decoration:none" href = "{% url 'forum:profilo' request.user.pk %}"><strong>{{request.user.username}}</strong> </a></div>
+            <button class="btn btn-dark " onclick="showDiv()" >Scrivi recensione</button>
             {% else %}
             <div class = "h5 mt-2"> <a class = "text-black" style = "text-decoration:none" href = "{% url 'login' %}">Entra nel club</a> </div>
+            <a class="btn btn-dark " href = "{% url 'login' %}" >Scrivi recensione</a>
             {% endif %}
             
-            <a type="button" class="btn btn-dark " href="{% url 'forum:pubblicareview' %}">Scrivi Recensione</a>
+          </div>
+        </div>
+        <div class="card d-none align-items-middle mt-2" id="myDIV" style="border-radius: 15px">
+          <div class="card-body p-4 d-flex justify-content-between">
+            <form method="post" action={% url 'forum:pubblicareview' %}> {% csrf_token %}
+              {{ form | crispy}}
+              <div class =" h4 mt-2 d-flex justify-content-end">
+                <input type="submit" class="btn btn-dark" value="Conferma">
+              </div>
+          </form>
           </div>
         </div>
 
@@ -133,6 +144,7 @@
 {% block myscript %}
 <script src="{% static '/script/sidebar.js' %}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static '/script/hidden.js' %}"></script>
 
 
 {% endblock myscript %}

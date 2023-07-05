@@ -36,14 +36,26 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="col-lg-4 secondsidebar">
-            <div class="content-wrapper" >
-                <div class="card d-flex align-items-middle" style="border-radius: 15px;">
+        <div class="col-lg-4 ">
+            <div class="" >
+                <div class="card d-flex align-items-end" style="border-radius: 10px;">
                     <div class="card-body p-4 d-flex justify-content-center">        
-                        <a type="button" class="btn btn-dark " href="{% url 'forum:creategroup' %}">Fonda il tuo CinemaClub</a>
+                        <button class="btn btn-dark " onclick="showDiv()" >Fonda il tuo CinemaClub</button>
                     </div>
                 </div>
+
+                <div class="card d-none align-items-middle mt-2" id="myDIV" style="border-radius: 15px">
+                    <div class="card-body p-4 d-flex justify-content-between">
+                      <form method="post" action={% url 'forum:creategroup' %}> {% csrf_token %}
+                        {{ form | crispy}}
+                        <div class =" h4 mt-2 d-flex justify-content-end">
+                          <input type="submit" class="btn btn-dark" value="Conferma">
+                        </div>
+                    </form>
+                    </div>
+                  </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -54,6 +66,7 @@
 
 {% block myscript %}
 <script src="{% static '/script/sidebar.js' %}"></script>
+<script src="{% static '/script/hidden.js' %}"></script>
 
 
 {% endblock myscript %}

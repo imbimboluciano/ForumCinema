@@ -8,11 +8,9 @@ window.onscroll = () => {
     let contentHeight = sidebar_content.getBoundingClientRect().height;
 
     if( scrollTop >= contentHeight - viewportHeight + sidebarTop) {
-        sidebar_content.style.transform = `translateY(-${(contentHeight - viewportHeight + sidebarTop)}px)`;
-        sidebar_content.style.position  = "fixed"; 
+        sidebar_content.classList.add('position-fixed'); 
     }
     else{
-        sidebar_content.style.transform = "";
         sidebar_content.style.position  = ""; 
         }
 };

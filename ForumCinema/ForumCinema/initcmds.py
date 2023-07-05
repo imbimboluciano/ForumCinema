@@ -17,6 +17,7 @@ def citazione_table():
 
 def erase_movie_table():
     CinemaClub.objects.all().delete()
+    User.objects.all().delete()
    
 
 

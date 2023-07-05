@@ -21,7 +21,7 @@ from .views import *
 app_name = "forum"
 
 urlpatterns = [
-    path('pubblicarecensione/',CreateReviewView.as_view(), name = "pubblicareview"),
+    path('pubblicarecensione/',create_review, name = "pubblicareview"),
     path('profilo/<pk>', ProfiloDetailView.as_view(), name="profilo"),
     path('modificaprofilo/', update_profile,name = "modificaprofilo"),
     path('aggiungifilm/', FavoritiesMovieUpdate.as_view(), name="aggiungifilm"),
@@ -41,6 +41,7 @@ urlpatterns = [
     path("cancellareview/<pk>", EliminaReviewView.as_view(), name = "cancellareview"),
     path("cancellacommento/<pk>/<int:review>", EliminaCommentView.as_view(), name = "cancellacommento"),
     path("cancellapost/<pk>/<int:group>", EliminaPostView.as_view(), name = "cancellapost"),
+    path("eliminagruppo/<pk>/", EliminaGroupView.as_view(), name = "eliminagruppo"),
     path('modificacommento/<pk>/', ModificaCommentView.as_view(), name = "updatecomment"),
     path('modificapost/<pk>/', ModificaPostView.as_view(), name = "updatepost"),
     path('ricerca/', search, name = "ricerca"),

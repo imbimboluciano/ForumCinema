@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'forum',
-    'polls'
+    'polls',
 ]
 
 MIDDLEWARE = [
@@ -148,5 +148,5 @@ LOGIN_REDIRECT_URL = "/?login=ok" #redireziona alla home, ma con un parametro GE
 LOGIN_URL = reverse_lazy('login')
 
 SESSION_EXPIRE_SECONDS = 1800  # Expire after 30 minutes
-SESSION_TIMEOUT_REDIRECT = '/'
+SESSION_TIMEOUT_REDIRECT = '/logout/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True

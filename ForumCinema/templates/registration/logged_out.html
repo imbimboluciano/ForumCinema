@@ -14,4 +14,12 @@
 
 {% endblock %}
 
-{% block footer %} {% endblock %}
+{% block myscript %}
+<script type="text/javascript">
+    setTimeout(function() {
+        window.location.href = '/';
+    }, 3000);
+</script>
+
+
+{% endblock myscript %}

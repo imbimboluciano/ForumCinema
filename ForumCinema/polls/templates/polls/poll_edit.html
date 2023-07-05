@@ -1,49 +1,69 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+{% load static %}
+
+
 {% block content %}
 <div class="container">
     <div class="row center">
-        <div class="col-md-6 offset-md-3">
-            <h2>Edit poll</h2>
-            {% if messages %}
-            {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% endif %}
-            <form action="" method="POST">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    {{ field.label_tag }}
-                    {{ field }}
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Update</button>
-                <a class="btn btn-danger" href="{% url 'polls:deletepoll' poll.pk group %}" role="button" onclick="return confirm('Sei sicuro di voler eliminare?')">Delete</a>
-                <a class="btn btn-warning" href="{% url 'polls:addchoice' poll.pk group %}" role="button">Add Choice</a>
-            </form>
+        <div class="col mt-5 d-flex justify-content-center">
+            <div class="card w-50 ">
+              <div class="card-body">
+                <h4 class="card-title text-center">Modifica Sondaggio</h4>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy}}
 
-            <div class="choices">
-                <h2 class="text-center mt-3">Choices</h2>
-                <hr>
-                <ul class="list-group">
-                    {% for choice in poll.choice_set.all %}
-                    <li class="list-group-item"><a href="{% url 'polls:choice_edit' choice.id %}"><i class="fas fa-pencil-alt"></i></a>&nbsp
-                        {{ choice.choice_text }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                    
 
+                    <div class =" h4 mt-2 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-outline-success mx-2">Modifica</button>
+                    <a class="btn btn-outline-danger" href="{% url 'polls:deletepoll' poll.pk group %}" role="button" onclick="return confirm('Sei sicuro di voler eliminare?')">Delete</a>
+                    </div>
+                </form>
+
+                <div class="choices">
+                    <h2 class="text-center mt-3">Choices</h2>
+                    <hr>
+                    <ul class="list-group">
+                        {% for choice in poll.choice_set.all %}
+                        <li class="list-group-item"><a href="{% url 'polls:choice_edit' choice.pk group %}"><i class="bi bi-pencil "></i></a>
+                            <a href="{% url 'polls:choice_delete' choice.pk group %}"><i class="bi bi-x-circle text-danger"></i></a>
+                            {{ choice.choice_text }}</li>
+                        {% endfor %}
+                    </ul>
+                        <div class ="mt-2 d-none container" id="myDIV"> 
+                            <div class = "row">
+                                <div class="col ">
+                                    <form class= "form-inline"  method="post" action={% url 'polls:addchoice' poll.pk group %} > {% csrf_token %}
+                                        {{ choice_form | crispy}}
+                                        <div class ="mx-2 mt-3 d-flex justify-content-center">
+                                            <input type="submit" class="btn btn-dark" value="Conferma">
+                                        </div>
+                                    </form>
+                                </div>
+                            
+                        </div>
+                        </div>
+                    <button class="btn btn-warning mt-2" onclick="showDiv()" >Aggiungi Opzione</button>
+                </div>
+    
+                <div class =" h4 mt-2 d-flex justify-content-end">
+                    <a type="submit" class="btn btn-outline-dark mx-2" href="{% url 'forum:detailgroup' group %}">Annulla</a>
+                    </div>
+              </div>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
+{% block myscript %}
+
+<script src="{% static '/script/hidden.js' %}"></script>
+
+{% endblock myscript %}
+
+
+

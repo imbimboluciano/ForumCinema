@@ -1,22 +1,28 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
 <div class="container">
-    <div class="row center">
-        <div class="col-md-6 offset-md-3">
-            <h2>Create new poll</h2>
-            <form action="" method="POST">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    {{ field.label_tag }}
-                    {{ field }}
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Add Poll</button>
-                <a class="btn btn-warning" href="" role="button">Back</a>
+    <div class="row ">
+        <div class="col mt-5 d-flex justify-content-center">
+            <div class="card w-50">
+              <div class="card-body">
+                <h4 class="card-title text-center">Pubblica nuovo sondaggio</h4>
+                <form action="" method="POST">{% csrf_token %}
+                    {{ form | crispy}}
+
+                
+                    <div class =" h4 mt-2 d-flex justify-content-end">
+                        <a class="btn btn-outline-dark mx-2" href="{% url 'forum:detailgroup' group %}" role="button">Annulla</a>
+                        <button type="submit" class="btn btn-dark">Conferma</button>
+                      </div>
+                
+              
             </form>
+              </div>
+            </div>
+            
         </div>
     </div>
 </div>

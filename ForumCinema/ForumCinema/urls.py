@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^$|^/$|^home/$',ReviewListView.as_view(),name = "home"),
     path("register/", signup, name="register"),
-    path("activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/",activate, name='activate'),
+    re_path(r"activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/",activate, name='activate'),
     path("login/", auth_views.LoginView.as_view(), name="login"),
 	path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path('changepassword/',auth_views.PasswordChangeView.as_view(template_name = "change_password.html", success_url = '/'),name='change_password'),

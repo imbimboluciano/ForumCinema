@@ -26,7 +26,7 @@ def polls_add(request, group):
             return HttpResponseRedirect(reverse('forum:detailgroup', args=[group]))
     else:
         form = PollAddForm()
-        context = {'form': form}
+        context = {'form': form, 'group': group}
         return render(request, 'polls/add_poll.html', context)
    
 
@@ -44,8 +44,9 @@ def polls_edit(request, pk, group):
             return HttpResponseRedirect(reverse('forum:detailgroup', args=[group]))
     else:
         form = EditPollForm(instance=poll)
+        choice_form = ChoiceAddForm()
 
-    return render(request, "polls/poll_edit.html", {'form': form, 'poll': poll, "group": group})
+    return render(request, "polls/poll_edit.html", {'form': form, 'poll': poll, "group": group, 'choice_form': choice_form})
 
 
 @login_required
@@ -71,14 +72,9 @@ def add_choice(request, pk, group):
             new_choice.poll = poll
             new_choice.save()
             return HttpResponseRedirect(reverse('polls:editpoll', args=[pk,group]))
-    else:
-        form = ChoiceAddForm()
-    context = {'form': form,}
-    return render(request, 'polls/add_choice.html', context)
-
 
 @login_required
-def choice_edit(request, choice_id):
+def choice_edit(request, choice_id, group):
     choice = get_object_or_404(Choice, pk=choice_id)
     poll = get_object_or_404(Poll, pk=choice.poll.id)
     if request.user != poll.owner:
@@ -90,9 +86,7 @@ def choice_edit(request, choice_id):
             new_choice = form.save(commit=False)
             new_choice.poll = poll
             new_choice.save()
-            messages.success(
-                request, "Choice Updated successfully.", extra_tags='alert alert-success alert-dismissible fade show')
-            return redirect('polls:edit', poll.id)
+            return redirect('polls:editpoll', poll.pk, group)
     else:
         form = ChoiceAddForm(instance=choice)
     context = {
@@ -104,15 +98,13 @@ def choice_edit(request, choice_id):
 
 
 @login_required
-def choice_delete(request, choice_id):
+def choice_delete(request, choice_id, group):
     choice = get_object_or_404(Choice, pk=choice_id)
     poll = get_object_or_404(Poll, pk=choice.poll.id)
     if request.user != poll.owner:
         return redirect('home')
     choice.delete()
-    messages.success(
-        request, "Choice Deleted successfully.", extra_tags='alert alert-success alert-dismissible fade show')
-    return redirect('polls:edit', poll.id)
+    return redirect('polls:editpoll', poll.pk, group)
 
 
 def poll_detail(request, pk, group):
